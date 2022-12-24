@@ -1,22 +1,6 @@
 version: '3.8'
 
 services:
-  mtcnn: 
-    image: mtcnn
-    build: ./mtcnn 
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-    environment:
-    - NVIDIA_VISIBLE_DEVICES=all
-    ports:
-      - 5000:5000
-    command: python server.py  
-
   triton: 
     image: triton
     build: ./triton 
@@ -57,10 +41,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    depends_on:
-      - mtcnn
-      - triton
-      - elasticsearch
     volumes:
       - ./data:/data
     command: uvicorn main:api --host 0.0.0.0
