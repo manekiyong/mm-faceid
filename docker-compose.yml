@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  mtcnn: 
+    image: mtcnn
+    build: ./mtcnn 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+    - NVIDIA_VISIBLE_DEVICES=all
+    ports:
+      - 5000:5000
+    command: python server.py  
+
+  triton: 
+    image: triton
+    build: ./triton 
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./triton/models:/models
+    ulimits:
+      memlock: -1 # set upper limit for how much memory is locked for the container (-1 means lock as much as the container uses)
+    shm_size: 16gb # set upper limit for how much shared memory container can use
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    ports:
+      - 8000:8000
+      - 8001:8001
+      - 8002:8002
+    command: tritonserver --model-repository=/models
+    # restart: always
+
+
+  face_id:
+    image: face_id
+    build: ./face_id_api
+    ports: #to the host
+        - 8004:8000     #host:container
+    ulimits:
+      memlock: -1 # set upper limit for how much memory is locked for the container (-1 means lock as much as the container uses)
+    shm_size: 4gb
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      - mtcnn
+      - triton
+      - elasticsearch
+    volumes:
+      - ./data:/data
+    command: uvicorn main:api --host 0.0.0.0
+    # restart: always
+

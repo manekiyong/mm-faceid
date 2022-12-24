@@ -1,0 +1,17 @@
+EMB:
+  emb_path: '../data/pt_emb'
+  get_emb: True
+
+MTCNN:
+  URL: 'http://mtcnn:5000'
+
+triton:
+  URL: 'triton:8000'
+  model_name: 'facenet'
+  batch_size: 16 #TO CORRESPOND TO TRITON's `config.pbtxt`
+
+ELASTICSEARCH:
+  URL: 'https://elasticsearch:9200'
+  INDEX_NAME: 'wikipedia'
+  ELASTIC_USERNAME: elastic
+  ELASTIC_PASSWORD: changeme
