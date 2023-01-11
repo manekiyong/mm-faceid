@@ -79,3 +79,17 @@ def generate(img_list: ImageFolder):
     else:
         uploader.save_emb(img_dict['id'], emb)
         return {"Response": "OK"}
+
+# @api.post("/embedding")
+# def generate(img_list: ImageFolder):
+#     """
+#     Takes in an ImageFolder object, generates an embedding and saves it locally.
+#     """
+#     img_dict = img_list.dict()
+#     emb = dataset.generate_embedding_from_b64(
+#         img_dict['id'], img_dict['images'])
+#     if emb == []:
+#         return {"Response": "No embedding generated"}
+#     else:
+#         uploader.save_emb(img_dict['id'], emb)
+#         return {"Response": "OK"}

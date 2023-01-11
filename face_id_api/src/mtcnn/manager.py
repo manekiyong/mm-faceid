@@ -4,7 +4,7 @@ import base64
 import json
 import yaml
 
-from model.mtcnn import MTCNN
+from mtcnn.model.mtcnn import MTCNN
 from PIL import Image
 
 def read_yaml(file_path='config.yaml'):
