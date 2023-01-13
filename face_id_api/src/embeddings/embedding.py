@@ -22,6 +22,11 @@ class EmbeddingGenerator():
             int: 0 if there is invalid types, 1 otherwise
 
         """
+        res_dict = {}
+        res_dict['indiv_emb'] = []
+        res_dict['indiv_box'] = []
+        res_dict['indiv_prob'] = []
+        
         avg_emb = torch.zeros(512)
         img_count = 0  # Reset Image Count
         for i in img_b64_list:
@@ -33,7 +38,12 @@ class EmbeddingGenerator():
                 img_embedding = self.inference.infer_with_triton(top_img)
                 img_embedding = torch.from_numpy(img_embedding)
                 avg_emb = avg_emb.add(img_embedding[max_val])
+                res_dict['indiv_box'].append(face_data['box'][max_val])
+                res_dict['indiv_emb'].append(img_embedding[max_val].tolist())
+                res_dict['indiv_prob'].append(face_data['prob'][max_val])
         if img_count == 0:
-            return []
-        avg_emb = avg_emb.div(img_count)
-        return avg_emb.tolist()
+            res_dict['avg_emb'] = []
+        else:
+            avg_emb = avg_emb.div(img_count)
+            res_dict['avg_emb'] = avg_emb.tolist()
+        return res_dict
