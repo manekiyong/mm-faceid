@@ -10,16 +10,14 @@ emb_generator = EmbeddingGenerator()
 class Image(BaseModel):
     image: str
 
-
-class ImageFolder(BaseModel):
-    id: int
+class ImageList(BaseModel):
     images: List[Image]
 
 
 api = FastAPI()
 
 @api.post("/embedding")
-def embedding(img_list: ImageFolder):
+def embedding(img_list: ImageList):
     """
     Takes in an ImageFolder object, generates an embedding and saves it locally.
     """
