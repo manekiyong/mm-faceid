@@ -95,5 +95,6 @@ class MTCNNManager():
                                 example shape: [N, 1]
                 where N is the number of faces found
         """
+        img_bytes = base64.b64decode(img_bytes.encode('utf-8'))
         res = self.parse_results(img_bytes)
         return res
