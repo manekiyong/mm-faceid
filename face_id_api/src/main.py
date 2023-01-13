@@ -21,7 +21,9 @@ def embedding(img_list: ImageList):
     """
     Takes in an ImageFolder object, generates an embedding and saves it locally.
     """
+    print(img_list)
     img_dict = img_list.dict()
+    print(img_dict)
     emb = emb_generator.generate_embedding(img_dict['images'])
     if emb == []:
         return {"response": "No embedding generated"}
