@@ -24,7 +24,6 @@ def embedding(img_list: ImageList):
     img_dict = img_list.dict()
     res = emb_generator.generate_embedding(img_dict['images'])
     emb = res['avg_emb']
-    print(res)
     if emb == []:
         return {"response": "No embedding generated"}
     else:
