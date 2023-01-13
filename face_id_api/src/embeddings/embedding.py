@@ -25,7 +25,7 @@ class EmbeddingGenerator():
         avg_emb = torch.zeros(512)
         img_count = 0  # Reset Image Count
         for i in img_b64_list:
-            face_data = self.mtcnn.crop_faces_from_b64(i)
+            face_data = self.mtcnn.crop_faces_from_b64(i['image'])
             if len(face_data['img']) != 0:
                 img_count += 1
                 max_val = np.argmax(face_data['prob'])
