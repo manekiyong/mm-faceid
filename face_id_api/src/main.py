@@ -28,3 +28,18 @@ def embedding(img_list: ImageList):
         return {"response": "No embedding generated"}
     else:
         return {"response": "200", "emb": emb}
+
+
+@api.post("/detect")
+def detect(img: Image):
+    """
+    Takes in an ImageFolder object, generates an embedding and saves it locally.
+    """
+    img_dict = img.dict()
+    res = emb_generator.detect_all_faces(img_dict['image'])
+
+    # emb = res['avg_emb']
+    # if emb == []:
+    #     return {"response": "No embedding generated"}
+    # else:
+    return {"response": "200", "body": res}

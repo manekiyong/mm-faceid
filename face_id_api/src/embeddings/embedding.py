@@ -19,7 +19,7 @@ class EmbeddingGenerator():
             img_b64_list (list): Mapping to be checked
 
         Returns:
-            int: 0 if there is invalid types, 1 otherwise
+            dict: results containing the individual embeddings, bounding boxes, probabilities and 
 
         """
         res_dict = {}
@@ -47,3 +47,26 @@ class EmbeddingGenerator():
             avg_emb = avg_emb.div(img_count)
             res_dict['avg_emb'] = avg_emb.tolist()
         return res_dict
+        
+    def detect_all_faces(self, img_b64: List):
+        """
+        Takes in a list of images parsed as base64 format and generate the average embedding of all the faces
+        The assumption is that the image provided has only 1 distinct face within image to establish the identity of an individual
+
+        Args:
+            img_b64 (str): image in base64 str
+
+        Returns:
+            int: 0 if there is invalid types, 1 otherwise
+
+        """
+        face_data = self.mtcnn.crop_faces_from_b64(img_b64)
+        face_data['emb'] = []
+        if len(face_data['img']) != 0:
+            for img in face_data['img']:
+                img_embedding = self.inference.infer_with_triton([img])
+                img_embedding = img_embedding.tolist()
+                face_data['emb'].append(img_embedding[0]) # Ori dim is 1x512
+        del face_data['img']
+            
+        return face_data
